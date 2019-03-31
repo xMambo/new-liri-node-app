@@ -42,6 +42,26 @@ function findMovie(userInput) {
 
 }
 
+function findConcert(userInput) {
+    var queryUrl = ("https://rest.bandsintown.com/artists/" + userInput + "/events?app_id=codingbootcamp");
+
+    axios.get(queryUrl).then(
+        function (response) {
+            for(var i=0; i < response.data.length; i++){
+
+            console.log("\n----------------------------------");
+            console.log("Show: " + response.data[i].lineup[0],
+                        "\nVenue: " + response.data[i].venue.name,
+                        "\nLocation: " + response.data[i].venue.city + "," + response.data[i].venue.country,
+                        "\nDate: " + response.data[i].datetime);
+            console.log("----------------------------------\n");
+            }
+        }).catch(function (error) {
+        console.log(error);
+    });
+
+}
+
 function spotifySong(userInput) {
     spotify.search({
         type: "track",
