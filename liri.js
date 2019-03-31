@@ -6,6 +6,8 @@ var Twitter = require('twitter');
 
 var fs = require("fs");
 
+var moment = require('moment');
+
 var Spotify = require('node-spotify-api');
 
 var spotify = new Spotify(keys.spotify);
@@ -52,8 +54,10 @@ function findConcert(userInput) {
             console.log("\n----------------------------------");
             console.log("Show: " + response.data[i].lineup[0],
                         "\nVenue: " + response.data[i].venue.name,
-                        "\nLocation: " + response.data[i].venue.city + "," + response.data[i].venue.country,
-                        "\nDate: " + response.data[i].datetime);
+                        "\nLocation: " + response.data[i].venue.city + "," + response.data[i].venue.country);
+
+            var responseDate = response.data[i].datetime
+            console.log("Date: " + moment(responseDate).format('MM/DD/YYYY'));
             console.log("----------------------------------\n");
             }
         }).catch(function (error) {
