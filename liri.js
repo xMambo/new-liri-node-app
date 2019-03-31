@@ -6,45 +6,12 @@ var Twitter = require('twitter');
 
 var fs = require("fs");
 
-var getMyTweets = function() {
-
-var client = new Twitter(keys.twitterKeys);
- 
-
-var params = {screen_name: '_k_miller'};
-client.get('statuses/user_timeline', params, function(error, tweets, response) {
-  if (!error) {
-      for (var i=0; i<tweets.length; i++) {
-          console.log([i].created_at);
-          console.log("");
-          console.log(tweets[i].text);
-      }
-  }
-});
-}
-var pick = function(caseData, funtionData) {
-    switch(caseData) {
-        case "my-tweets" :
-        getMyTweets();
-        break;
-        default:
-        console.log("LIRI don't know that");
-    }
-}
-
 var Spotify = require('node-spotify-api');
- 
+
 var spotify = new Spotify(keys.spotify);
- 
-spotify
-  .request('https://api.spotify.com/v1/tracks/7yCPwWs66K8Ba5lFuU2bcx')
-  .then(function(data) {
-    console.log(data); 
-  })
-  .catch(function(err) {
-    console.error('Error occurred: ' + err); 
-  });
-  
+
+
+
 // Store all of the arguments in an array
 var nodeArgs = process.argv;
 
@@ -54,39 +21,74 @@ var userInput = process.argv[3];
 var axios = require("axios");
 
 
-// Create an empty variable for holding the movie name
-var movieName = "";
+function findMovie(userInput) {
+    var queryUrl = ("https://www.omdbapi.com/?t=" + userInput + "&y=&plot=short&apikey=trilogy");
 
-// Loop through all the words in the node argument
-// And do a little for-loop magic to handle the inclusion of "+"s
-for (var i = 2; i < nodeArgs.length; i++) {
+    axios.get(queryUrl).then(
+        function (response) {
+            console.log("\n----------------------------------");
+            console.log("Title: " + response.data.Title,
+                "\nReleased: " + response.data.Year,
+                "\nIMdB: " + response.data.imdbRating,
+                "\nRotten Tomatoes: " + response.data.Ratings[1].Value,
+                "\nCountry: " + response.data.Country,
+                "\nLanguage: " + response.data.Language,
+                "\nPlot: " + response.data.Plot,
+                "\nActors: " + response.data.Actors);
+            console.log("----------------------------------\n");
+        }).catch(function (error) {
+        console.log(error);
+    });
 
-  if (i > 2 && i < nodeArgs.length) {
-    movieName = movieName + "+" + nodeArgs[i];
-  }
-  else {
-    movieName += nodeArgs[i];
-
-  }
 }
 
-// Then run a request with axios to the OMDB API with the movie specified
-var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
+function spotifySong(userInput) {
+    spotify.search({
+        type: "track",
+        query: userInput
+    }, function (err, data) {
+        if (err) {
+            return console.log("Error occured: " + err);
+        }
+        for (var i = 0; i < data.tracks.items.length; i++) {
+            console.log("\n----------------------------------");
+            console.log("Artist's name: " + data.tracks.items[i].artists[0].name,
+                        "\nSong name: " + data.tracks.items[i].name,
+                        "\nPreview URL: " + data.tracks.items[i].preview_url,
+                        "\nAlbum Name: " + data.tracks.items[i].album.name);
+             console.log("----------------------------------\n");
 
-// This line is just to help us debug against the actual URL.
-//console.log(queryUrl);
+        }
+    });
+}
 
-axios.get(queryUrl).then(
-  function(response) {
-      console.log("\n----------------------------------");
-      console.log("Title: " + response.data.Title,
-                  "\nReleased: " + response.data.Year,
-                  "\nIMdB: " + response.data.imdbRating,
-                  "\nRotten Tomatoes: " + response.data.Ratings[1].Value,
-                  "\nCountry: " + response.data.Country,
-                  "\nLanguage: " + response.data.Language,
-                  "\nPlot: " + response.data.Plot,
-                  "\nActors: " + response.data.Actors);
-      console.log("----------------------------------\n");
-  }
-);
+function doWhatItSays() {
+    fs.readFile("random.txt", "utf8", function (err, data) {
+        if (err) {
+            return console.log(err);
+        }
+        var dataArr = data.split(",");
+        console.log(dataArr);
+        chooseLIRI(dataArr[0], dataArr[1]);
+    });
+}
+
+function chooseLIRI(choice, userInput) {
+    switch (choice) {
+        case 'concert-this':
+            findConcert(userInput);
+            break;
+        case 'spotify-this-song':
+            spotifySong(userInput);
+            break;
+        case 'movie-this':
+            findMovie(userInput);
+            break;
+        case 'do-what-it-says':
+            doWhatItSays();
+            break;
+        default:
+            console.log("Error - try again.");
+    };
+}
+chooseLIRI(choice, userInput);
