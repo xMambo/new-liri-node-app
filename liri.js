@@ -1,28 +1,19 @@
+//Required
 require('dotenv').config();
-
 var keys = require("./keys.js");
-
-var Twitter = require('twitter');
-
 var fs = require("fs");
-
 var moment = require('moment');
-
 var Spotify = require('node-spotify-api');
-
 var spotify = new Spotify(keys.spotify);
+var axios = require("axios");
 
-
-
-// Store all of the arguments in an array
-var nodeArgs = process.argv;
-
+//Input on CLI
+var query = process.argv;
 var choice = process.argv[2];
 var userInput = process.argv[3];
 
-var axios = require("axios");
 
-
+// node liri.js movie-this
 function findMovie(userInput) {
     var queryUrl = ("https://www.omdbapi.com/?t=" + userInput + "&y=&plot=short&apikey=trilogy");
 
@@ -44,6 +35,7 @@ function findMovie(userInput) {
 
 }
 
+// node liri.js concert-this
 function findConcert(userInput) {
     var queryUrl = ("https://rest.bandsintown.com/artists/" + userInput + "/events?app_id=codingbootcamp");
 
@@ -66,6 +58,7 @@ function findConcert(userInput) {
 
 }
 
+//node liri.js spoitfy-this-song
 function spotifySong(userInput) {
     spotify.search({
         type: "track",
@@ -86,6 +79,7 @@ function spotifySong(userInput) {
     });
 }
 
+// node-liri-do-what-it-says
 function doWhatItSays() {
     fs.readFile("random.txt", "utf8", function (err, data) {
         if (err) {
@@ -97,6 +91,7 @@ function doWhatItSays() {
     });
 }
 
+//Switch statement to determine type selecvted.
 function chooseLIRI(choice, userInput) {
     switch (choice) {
         case 'concert-this':
@@ -115,4 +110,31 @@ function chooseLIRI(choice, userInput) {
             console.log("Error - try again.");
     };
 }
+
 chooseLIRI(choice, userInput);
+
+//Log input to log.txt
+var logQuery = query.splice(0,2)
+logQuery = "\n" + query.join(" ") + "\n"
+console.log(logQuery)
+
+fs.appendFile("log.txt", logQuery, function(err) {
+    if (err) {
+        console.log(err);
+    } else {
+        console.log("Log Updated");
+    }
+});
+
+//Data logger
+function dataLog(data) {
+    fs.appendFile("log.txt", data, function(err) {
+
+        if (err) {
+            console.log(err);
+            
+        } else {
+            console.log("Log Updated");
+        }
+    });
+}
