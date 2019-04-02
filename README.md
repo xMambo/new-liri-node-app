@@ -25,3 +25,6 @@ Bands In Town: https://manager.bandsintown.com/support/bandsintown-api
 Spotify: https://developer.spotify.com/my-applications/
 
 OMDb API: http://www.omdbapi.com/apikey.aspx
+
+
+![image](https://gfycat.com/ajarbountifulindianringneckparakeet)
