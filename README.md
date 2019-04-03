@@ -1,4 +1,6 @@
 # Liri - a node application
+https://xmambo.github.io/new-liri-node-app/
+
 
 LIRI is like iPhone's SIRI. However, while SIRI is a Speech Interpretation and Recognition Interface, LIRI is a _Language_ Interpretation and Recognition Interface. LIRI will be a command line node app that takes in parameters and gives you back data.
 
@@ -28,6 +30,5 @@ OMDb API: http://www.omdbapi.com/apikey.aspx
 
 
 
-https://xmambo.github.io/new-liri-node-app/
 
 <iframe src='https://gfycat.com/ifr/AjarBountifulIndianringneckparakeet' frameborder='0' scrolling='no' allowfullscreen width='640' height='444'></iframe>
